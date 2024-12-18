@@ -50,30 +50,37 @@ def cov_matrix(x, y): #calculate the covariance matrix between data x and y
     matrix = np.array([[cov_xx, cov_xy], [cov_yx, cov_yy]])
     return matrix
 
-def standard_deviation(x): # estimator of the std when the true mean is known
+def standard_deviation(x, y = 'null'): # estimator of the std when the true mean is known
+    sum = 0
+    if y == 'null':
+        for i in range(0, len(x)):
+            dif = (x[i] - mean(x))**2
+            sum = sum + dif
+        sd = math.sqrt((1 / len(x)) * sum)
+
+    else:
+        for i in range(0, len(x)):
+            dif = (x[i] - y)**2
+            sum = sum + dif
+        sd = math.sqrt((1 / len(x)) * sum)
+
+    return sd
+
+def s(x): # estimator of the std given no prior knowledge of the true mean
     sum = 0
     for i in range(0, len(x)):
         dif = (x[i] - mean(x))**2
         sum = sum + dif
-        
-    sd = math.sqrt((1 / len(x)) * sum)
-    return sd
-
-def s(x): # estimator of the std given no prior knowledge of the true mean
-    sum = []
-    for i in x:
-        for j in range(0, len(x)):
-            sum[j] = [(i - mean(x))**2]
     return 1 / math.sqrt(len(x) - 1) * np.sum(math.sqrt(sum))
 
-def std_of_mean(x): #std of the mean when the true mean is known
-    return standard_deviation(x) / math.sqrt(len(x))
+def std_of_mean(resolution, x): #std of the mean when the true mean is known
+    return resolution / math.sqrt(len(x))
 
-def std_of_std(x): #std of std when the true mean is known
-    return standard_deviation(x) / math.sqrt(2*len(x))
+def std_of_std(std, x): #std of std when the true mean is known
+    return std / math.sqrt(2*len(x))
 
-def std_of_std2(x): #std of std with no knowledge of the true mean
-    return s(x) / math.sqrt(2*(len(x) - 1))
+def std_of_std2(std, x): #std of std with no knowledge of the true mean
+    return std / math.sqrt(2*(len(x) - 1))
 
 def clt(data_array, n_samples, n_times): # pick n_samples from the data_array n_times
     sample_mean = []
