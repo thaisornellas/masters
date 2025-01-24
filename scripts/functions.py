@@ -51,27 +51,27 @@ def cov_matrix(x, y): #calculate the covariance matrix between data x and y
     return matrix
 
 def standard_deviation(x, y = 'null'): # estimator of the std when the true mean is known
-    sum = 0
+    sum_std = 0
     if y == 'null':
         for i in range(0, len(x)):
             dif = (x[i] - mean(x))**2
-            sum = sum + dif
-        sd = math.sqrt((1 / len(x)) * sum)
+            sum_std = sum_std + dif
+        sd = math.sqrt((1 / len(x)) * sum_std)
 
     else:
         for i in range(0, len(x)):
             dif = (x[i] - y)**2
-            sum = sum + dif
-        sd = math.sqrt((1 / len(x)) * sum)
+            sum_std = sum_std + dif
+        sd = math.sqrt((1 / len(x)) * sum_std)
 
     return sd
 
 def s(x): # estimator of the std given no prior knowledge of the true mean
-    sum = 0
+    sum_s = 0
     for i in range(0, len(x)):
         dif = (x[i] - mean(x))**2
-        sum = sum + dif
-    return 1 / math.sqrt(len(x) - 1) * np.sum(math.sqrt(sum))
+        sum_s = sum_s + dif
+    return 1 / math.sqrt(len(x) - 1) * np.sum(math.sqrt(sum_s))
 
 def std_of_mean(resolution, x): #std of the mean when the true mean is known
     return resolution / math.sqrt(len(x))
@@ -89,3 +89,12 @@ def clt(data_array, n_samples, n_times): # pick n_samples from the data_array n_
         mean_sample = np.sum(sample)
         sample_mean.append(mean_sample)
     return sample_mean
+
+def ls_simple(x, y):
+    return mean([x_i * y_i for x_i, y_i in zip(x,y)]) / mean([x_i * x_i for x_i in x])
+
+def ls_simple_var(x, sigma):
+    return sigma**2 / (len(x) * mean([x_i * x_i for x_i in x]))
+
+def chi2(y, fx, sigma):
+    return np.sum([((y_i - fx_i) / sigma)**2 for y_i, fx_i in zip(y, fx)])
